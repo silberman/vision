@@ -1,0 +1,41 @@
+
+AIzaSyCDIKN2DnmvF5xGyt0RluzCf9Tm3UedP4o
+
+
+base64 6328.png > base64_6328.png
+or:
+base64 -i input.jpg -o output.jpg
+
+def encode_image(image):
+  image_content = image.read()
+  return base64.b64encode(image_content)
+
+curl -v -k -s -H "Content-Type: application/json" https://vision.googleapis.com/v1/images:annotate?key=browser_key --data-binary @request_filename
+curl -v -k -s -H "Content-Type: application/json" https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCDIKN2DnmvF5xGyt0RluzCf9Tm3UedP4o --data-binary @json_request_6328.json
+
+Image recommended sizes
+FACE_DETECTION	1600 x 1200	Distance between eyes is most important
+LANDMARK_DETECTION	640 x 480
+LOGO_DETECTION	640 x 480
+LABEL_DETECTION	640 x 480
+TEXT_DETECTION	1024 x 768	OCR requires more resolution to detect characters
+SAFE_SEARCH_DETECTION	640 x 480
+
+In practice, a standard size of 640 x 480 pixels works well in most cases;
+sizes larger than this may not gain much in accuracy, while greatly diminishing throughput.
+When at all possible, pre-process your images to reduce their size to these minimum standards.
+
+File Sizes
+Image files sent to the Google Cloud Vision API should not exceed 4 MB.
+Reducing your file size can significantly improve throughput; however, be careful not to reduce
+image quality in the process. If you are batching images and sending them in one request,
+also note that the Vision API imposes an 8 MB per request limit.
+
+Usage limits
+MB per image	4 MB
+MB per request	8 MB
+Requests per second	10
+Requests per feature per day	700,000
+Requests per feature per month	20,000,000
+Images per second	8
+Images per request	16

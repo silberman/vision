@@ -1,0 +1,39 @@
+{
+  "responses": [
+    {
+      "labelAnnotations": [
+        {
+          "mid": "/m/025s35_",
+          "description": "ravine",
+          "score": 0.92695826
+        },
+        {
+          "mid": "/m/0521dbh",
+          "description": "texture",
+          "score": 0.88756746
+        },
+        {
+          "mid": "/m/01w5c_",
+          "description": "aerial photography",
+          "score": 0.87599772
+        },
+        {
+          "mid": "/m/01c34b",
+          "description": "flooring",
+          "score": 0.70906293
+        },
+        {
+          "mid": "/m/0hr8",
+          "description": "asphalt",
+          "score": 0.69078845
+        }
+      ],
+      "safeSearchAnnotation": {
+        "adult": "UNLIKELY",
+        "spoof": "VERY_UNLIKELY",
+        "medical": "POSSIBLE",
+        "violence": "UNLIKELY"
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "responses": [
+    {
+      "labelAnnotations": [
+        {
+          "mid": "/m/0m9cj",
+          "description": "banner",
+          "score": 0.55979812
+        },
+        {
+          "mid": "/m/0bkqqh",
+          "description": "signage",
+          "score": 0.50649136
+        },
+        {
+          "mid": "/m/011s0",
+          "description": "advertising",
+          "score": 0.50152016
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "responses": [
+    {
+      "labelAnnotations": [
+        {
+          "mid": "/m/083jv",
+          "description": "white",
+          "score": 0.92376119
+        },
+        {
+          "mid": "/m/04_tb",
+          "description": "map",
+          "score": 0.8300491
+        },
+        {
+          "mid": "/m/02p0sll",
+          "description": "wave",
+          "score": 0.6616388
+        },
+        {
+          "mid": "/m/0dzd8",
+          "description": "neck",
+          "score": 0.63986015
+        }
+      ],
+      "textAnnotations": [
+        {
+          "locale": "en",
+          "description": "'\n2500\n2600\n500\n",
+          "boundingPoly": {
+            "vertices": [
+              {
+                "x": 119,
+                "y": 26
+              },
+              {
+                "x": 235,
+                "y": 26
+              },
+              {
+                "x": 235,
+                "y": 212
+              },
+              {
+                "x": 119,
+                "y": 212
+              }
+            ]
+          }
+        }
+      ],
+      "safeSearchAnnotation": {
+        "adult": "UNLIKELY",
+        "spoof": "VERY_UNLIKELY",
+        "medical": "UNLIKELY",
+        "violence": "VERY_UNLIKELY"
+      }
+    }
+  ]
+}

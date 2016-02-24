@@ -1,0 +1,50 @@
+{
+  "responses": [
+    {
+      "labelAnnotations": [
+        {
+          "mid": "/m/01zbnw",
+          "description": "screenshot",
+          "score": 0.77638394
+        },
+        {
+          "mid": "/m/086nh",
+          "description": "web page",
+          "score": 0.52269024
+        }
+      ],
+      "textAnnotations": [
+        {
+          "locale": "da",
+          "description": "function getMaxValue (array)t\nDeclare a new variable to hold maximum value\nvar maxValue\n0:\nIterate over array's elements\nfor\n(var index\n0; index array\nlength\nindex\nGet array element at specific index\nvar element\narray [index]\nIn case element value is bigger than current maxValue update current maxValue\nif (element\nmaxValue)\nmaxValue element\nReturn maxValue\nreturn\nmaxValue;\n",
+          "boundingPoly": {
+            "vertices": [
+              {
+                "x": 24,
+                "y": 27
+              },
+              {
+                "x": 1318,
+                "y": 27
+              },
+              {
+                "x": 1318,
+                "y": 572
+              },
+              {
+                "x": 24,
+                "y": 572
+              }
+            ]
+          }
+        }
+      ],
+      "safeSearchAnnotation": {
+        "adult": "VERY_UNLIKELY",
+        "spoof": "VERY_UNLIKELY",
+        "medical": "UNLIKELY",
+        "violence": "VERY_UNLIKELY"
+      }
+    }
+  ]
+}

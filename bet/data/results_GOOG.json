@@ -1,0 +1,97 @@
+{
+  "responses": [
+    {
+      "logoAnnotations": [
+        {
+          "mid": "/m/045c7b",
+          "description": "Google",
+          "score": 0.21820559,
+          "boundingPoly": {
+            "vertices": [
+              {
+                "x": 57,
+                "y": 13
+              },
+              {
+                "x": 93,
+                "y": 13
+              },
+              {
+                "x": 93,
+                "y": 33
+              },
+              {
+                "x": 57,
+                "y": 33
+              }
+            ]
+          }
+        }
+      ],
+      "labelAnnotations": [
+        {
+          "mid": "/m/0h8kxbv",
+          "description": "body jewelry",
+          "score": 0.99883711
+        },
+        {
+          "mid": "/m/07s6nbt",
+          "description": "text",
+          "score": 0.85307825
+        },
+        {
+          "mid": "/m/086nh",
+          "description": "web page",
+          "score": 0.71390468
+        },
+        {
+          "mid": "/m/07d0f",
+          "description": "trademark",
+          "score": 0.71352005
+        },
+        {
+          "mid": "/m/0dwx7",
+          "description": "logo",
+          "score": 0.62434584
+        },
+        {
+          "mid": "/m/0h8jxfl",
+          "description": "vision care",
+          "score": 0.61805218
+        }
+      ],
+      "textAnnotations": [
+        {
+          "locale": "en",
+          "description": "Google\n",
+          "boundingPoly": {
+            "vertices": [
+              {
+                "x": 2,
+                "y": 3
+              },
+              {
+                "x": 97,
+                "y": 3
+              },
+              {
+                "x": 97,
+                "y": 38
+              },
+              {
+                "x": 2,
+                "y": 38
+              }
+            ]
+          }
+        }
+      ],
+      "safeSearchAnnotation": {
+        "adult": "VERY_UNLIKELY",
+        "spoof": "VERY_UNLIKELY",
+        "medical": "UNLIKELY",
+        "violence": "VERY_UNLIKELY"
+      }
+    }
+  ]
+}
