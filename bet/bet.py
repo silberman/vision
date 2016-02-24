@@ -11,6 +11,7 @@ import sys
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(THIS_DIR, 'data')
 
+XXX: this repo currently has active google api browsker key here.
 GOOGLE_BROWSER_KEY = "AIzaSyCDIKN2DnmvF5xGyt0RluzCf9Tm3UedP4o"
 
 BASE_GOOGLE_IMAGES_API_URL = 'https://vision.googleapis.com/v1/images:annotate?key=%s'
