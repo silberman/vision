@@ -6,6 +6,7 @@ Example usage:
 
 image_format, image_shape, image_mode = get_image_info(image_filename)
 
+width, height = get_image_shape(image_filename)
 """
 
 from PIL import Image
