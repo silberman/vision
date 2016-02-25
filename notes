@@ -24,6 +24,15 @@ To run your app on Android:
    cd /Users/dansilberman/vision/app
    react-native run-android
 
+
+Note on install of react-native-camera (from app directory, where package.json is)
+npm install rnpm --global
+npm install react-native-camera@https://github.com/lwansbrough/react-native-camera.git --save
+rnpm link react-native-camera
+
+
+
+
 ******** Google computer vision API info
 
 base64 6328.png > base64_6328.png
