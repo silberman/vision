@@ -1,4 +1,22 @@
 
+Stack:
+
+kubernetes+docker, or appengine
+
+python (flask?)
+google datastore? (look at "robust query")
+google cloud storage
+react-native
+redux
+
+
+
+********* Google cloud shell
+appengine deploy:
+gcloud preview app deploy app.yaml --promote
+
+********************************
+
 http://localhost:8081/debugger-ui
 ALT-window-J on my microsoft keyboard
 
@@ -26,6 +44,7 @@ To run your app on Android:
 
 
 Note on install of react-native-camera (from app directory, where package.json is)
+from https://github.com/lwansbrough/react-native-camera
 npm install rnpm --global
 npm install react-native-camera@https://github.com/lwansbrough/react-native-camera.git --save
 rnpm link react-native-camera
