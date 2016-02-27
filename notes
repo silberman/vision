@@ -1,4 +1,54 @@
 
+*************** Docker
+Note: on a mac, docker-machine runs a virtualbox VM that acts as the linux host
+for docker.  So docker-machine ls should show this "default" machine active.
+Other actual containers are visible from docker ps.
+
+The docker machine ip is the one we'll use to access the containers contained on it,
+and can be found via: docker-machine ip default
+
+
+~$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+~$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS
+default   *        virtualbox   Running   tcp://192.168.99.100:2376           v1.10.2
+~$ docker-machine env default
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://192.168.99.100:2376"
+export DOCKER_CERT_PATH="/Users/dansilberman/.docker/machine/machines/default"
+export DOCKER_MACHINE_NAME="default"
+# Run this command to configure your shell:
+# eval $(docker-machine env default)
+
+docker run hello-world
+
+docker run usage:
+ -d as a daemon
+ -P Publish all exposed ports to random ports
+ --name xxx
+docker run -d -P --name web nginx
+
+(vision)~/vision$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                                           NAMES
+397a2e1f26f4        nginx               "nginx -g 'daemon off"   About a minute ago   Up About a minute   0.0.0.0:32769->80/tcp, 0.0.0.0:32768->443/tcp   web
+(vision)~/vision$ docker port web
+443/tcp -> 0.0.0.0:32768
+80/tcp -> 0.0.0.0:32769
+
+(vision)~/vision$ docker-machine ip default
+192.168.99.100
+
+So can go to 192.168.99.100:32769 to see nginx successfully installed message
+
+to remove that container:
+docker stop web
+docker rm web
+
+
+
+
+*********************
 Stack:
 
 kubernetes+docker, or appengine
@@ -14,6 +64,16 @@ redux
 ********* Google cloud shell
 appengine deploy:
 gcloud preview app deploy app.yaml --promote
+
+
+
+
+******** Google cloud cli
+# list current gcloud config (to see what project is active, for one)
+gcloud config list
+gcloud config set project steam-1111
+gcloud config set compute/zone us-central1-c
+
 
 ********************************
 
