@@ -1,4 +1,23 @@
 
+
+*************** App engine
+
+To run devserver of app engine code in /vison/appengine:
+(vision)~/vision$ dev_appserver.py appengine/
+
+To have dev app raise NeedIndexError if there isn't an index needed (for testing),
+and other ways to run dev_appserver:
+dev_appserver.py --require_indexes
+dev_appserver.py DIRECTORY/app.yaml
+dev_appserver.py --host localhost:9999 DIRECTORY/app.yaml
+
+
+*** to deploy ***
+(vision)~/vision$ gcloud preview app deploy appengine/app.yaml
+see "Deploying datastore indexes" at https://cloud.google.com/sdk/gcloud-app
+
+
+
 *************** Docker
 Note: on a mac, docker-machine runs a virtualbox VM that acts as the linux host
 for docker.  So docker-machine ls should show this "default" machine active.
