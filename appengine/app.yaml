@@ -5,3 +5,10 @@ threadsafe: true
 handlers:
 - url: /.*
   script: helloworld.app
+
+libraries:
+- name: ssl
+  version: latest
+
+builtins:
+- remote_api: on

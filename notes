@@ -1,5 +1,43 @@
 
 
+{
+  "requests":[
+    {
+      "image":{
+        "source": {
+          "gcs_image_uri":"gs://bucket-name/path_to_image_object"
+        }
+      },
+      "features": [
+        {
+          "type":"LABEL_DETECTION",
+          "maxResults":1
+        }
+      ]
+    }
+  ]
+}
+
+
+
+******* Google credentials
+
+Using default credentials since on appengine
+
+https://developers.google.com/identity/protocols/application-default-credentials?hl=en_US
+prod will automatically have credentials
+dev needs to run once:  gcloud auth login
+
+then can do:
+from oauth2client.client import GoogleCredentials
+credentials = GoogleCredentials.get_application_default()
+
+*******
+
+Adding module to requirements.txt that are used in appengine, see comment at top of
+appengine/appengine_config.py.  Basically we pip install stuff into vision/appengine/lib,
+and then appengine_config.py tells appengine about that lib directory.
+
 *************** App engine
 
 To run devserver of app engine code in /vison/appengine:
