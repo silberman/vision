@@ -28,7 +28,6 @@ class LabelPictureApp extends Component {
     console.log("render called");
     return (
       <View style={styles.container}>
-        <Text>Yooooo</Text>
         <Camera
           ref={(cam) => {
             this.camera = cam;

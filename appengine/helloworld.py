@@ -1,4 +1,5 @@
 
+import datetime
 import json
 import httplib2
 import logging
@@ -6,6 +7,7 @@ import os
 import time
 import webapp2
 
+from gcloud import storage
 import cloudstorage as gcs
 from googleapiclient import discovery
 from apiclient.discovery import build
@@ -31,8 +33,13 @@ class PostPictureHandler(webapp2.RequestHandler):
 
         photo_data = self.request.get('photo')
 
-        filename_created = write_photo(photo_data)
-        best_label = get_best_label(filename_created)
+        #filename_created = write_photo(photo_data)
+        #filename_created = write_photo_via_credentials(photo_data)
+
+        gs_location = write_photo_via_gcloud_storage(photo_data)
+        best_label = get_best_label(gs_location=gs_location)
+
+        #best_label = get_best_label(filename_created)
 
         self.response.content_type = 'application/json'
 
@@ -42,6 +49,45 @@ class PostPictureHandler(webapp2.RequestHandler):
             response_obj = dict(success=True, best_label=best_label)
         print response_obj
         self.response.write(json.dumps(response_obj))
+
+
+def _safe_filename(filename):
+    """
+    Generates a safe filename that is unlikely to collide with existing objects
+    in Google Cloud Storage.
+    ``filename.ext`` is transformed into ``filename-YYYY-MM-DD-HHMMSS.ext``
+    """
+    date = datetime.datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
+    basename, extension = filename.rsplit('.', 1)
+    return "{0}-{1}.{2}".format(basename, date, extension)
+
+def write_photo_via_gcloud_storage(photo_data):
+    client = storage.Client(project='steam-1111')
+    print "Client:", client
+    base_filename = "testfilename.jpg"
+    safe_filename = _safe_filename(base_filename)
+    bucket_name = 'steam-1111.appspot.com'
+    bucket = client.get_bucket(bucket_name)
+    print bucket
+    content_type = "image/jpeg"
+    blob = bucket.blob(safe_filename)
+    blob.upload_from_string(photo_data, content_type=content_type)
+    # blob.path is like: /b/steam-1111.appspot.com/o/testfilename-2016-02-28-202045.jpg
+    # so for the gs: url we can just replace /b with gs:/ and /o/ with /
+    # XXX must be a better way to get this from blob
+    gs_location = blob.path.replace('/b/', 'gs://').replace('/o/', '/')
+    return gs_location
+
+
+
+def write_photo_via_credentials(photo_data):
+    raise NotImplementedError("doesn't work yet")
+    credentials = GoogleCredentials.get_application_default()
+    service = discovery.build('storage', 'v1', credentials=credentials)
+    filename = 'nameOfObject'
+    req = service.objects().insert_media(bucket='somebucket', name=filename, media_body=photo_data)
+    resp = req.execute()
+    return filename
 
 
 def write_photo(photo_from_POST):
@@ -72,15 +118,18 @@ def get_vision_service():
     return discovery.build('vision', 'v1', credentials=credentials,
                            discoveryServiceUrl=DISCOVERY_URL)
 
-def get_best_label(filename_with_bucket):
+def get_best_label(filename_with_bucket=None, gs_location=None):
     '''Run a label request on a single image'''
-    print "get_best_label called with filename", filename_with_bucket
-
+    assert filename_with_bucket or gs_location
     service = get_vision_service()
-    print "service:", service
 
-    image_uri = "gs:/%s" % (filename_with_bucket)
-    print "image_uri:", image_uri
+    if gs_location is None:
+        # backward compatibility
+        assert filename_with_bucket is not None
+        image_uri = "gs:/%s" % (filename_with_bucket)
+        print "image_uri:", image_uri
+    else:
+        image_uri = gs_location
 
     service_request = service.images().annotate(
       body={
