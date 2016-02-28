@@ -1,5 +1,6 @@
 'use strict';
 import React, {
+  AlertIOS,
   AppRegistry,
   Component,
   Dimensions,
@@ -96,6 +97,10 @@ class LabelPictureApp extends Component {
                     );
                     return;
                 }
+                AlertIOS.alert(
+                    'We got something back!',
+                    'Not sure what it says though'
+                );
             };
 
             console.log("we got something back from server");
