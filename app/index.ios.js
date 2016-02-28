@@ -96,15 +96,25 @@ class LabelPictureApp extends Component {
                     );
                     return;
                 }
-                AlertIOS.alert(
-                    'We got something back!',
-                    'Not sure what it says though'
-                );
+                console.log("we got a non-error back back, it may or may not have the final result");
+                console.log(xhr);
+                var response_obj = JSON.parse(xhr.responseText);
+                console.log(response_obj);
+                if (response_obj.success) {
+                    console.log("success");
+                    var best_label = response_obj.best_label;
+                    console.log("best label is: " + best_label);
+                    AlertIOS.alert(
+                        'Nice pic!',
+                        'What a beautiful ' + best_label
+                    );
+                }
             };
 
-            console.log("we got something back from server");
-            console.log(xhr);
-            //console.log()
+
+            //console.log("we got something back from server");
+            //console.log(xhr);
+            //console.log(xhr);
             return;
             fetch(PICTURE_POST_URL, request_object)
               .then((response) => response.text())
