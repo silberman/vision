@@ -89,67 +89,37 @@ class LabelPictureApp extends Component {
                 name: 'photo.jpg',
             };
             var body = new FormData();
-
             body.append('photo', photo);
             body.append('detection_type', detection_type);
 
-            var xhr = new XMLHttpRequest();
+            var post_info = {
+                method: 'POST',
+                body: body,
+            }
 
-            xhr.open('POST', PICTURE_POST_URL);
-            xhr.send(body);
-
-            // need to set xhr onload function, as from:
-            // https://github.com/facebook/react-native/blob/2d921eeb7073d0286d13195e2975b344793998b0/Examples/UIExplorer/XHRExample.ios.js
-            xhr.onload = () => {
-                this.setState({isUploading: false});
-                if (xhr.status !== 200) {
-                    AlertIOS.alert(
-                        'Upload failed',
-                        'Expected HTTP 200 OK response, got ' + xhr.status
-                    );
-                    this.setNotLoading();
-                    return;
-                }
-                if (!xhr.responseText) {
-                    AlertIOS.alert(
-                        'Upload failed',
-                        'No response payload.'
-                    );
-                    this.setNotLoading();
-                    return;
-                }
-                console.log("we got a non-error back back, it may or may not have the final result");
-                console.log(xhr);
-                var response_obj = JSON.parse(xhr.responseText);
-                console.log(response_obj);
-                if (response_obj.success) {
-                    this.setNotLoading();
-                    var best_label = response_obj.best_label;
-                    AlertIOS.alert(
-                        'Nice pic!',
-                        best_label
-                    );
-                }
-            };
-
-
-            //console.log("we got something back from server");
-            //console.log(xhr);
-            //console.log(xhr);
-            return;
-            fetch(PICTURE_POST_URL, request_object)
-              .then((response) => response.text())
-              .then((responseText) => {
-                  console.log("response from POSTing:", responseText);
+            fetch(PICTURE_POST_URL, post_info)
+              .then((response) => response.json())
+              .then((response_info) => {
+                  console.log(response_info);
+                  if (response_info.success) {
+                      this.setNotLoading();
+                      AlertIOS.alert(
+                          'Nice pic!',
+                          response_info.best_label
+                      );
+                  } else {
+                      console.warn("response_obj with success false or missing");
+                  }
               })
               .catch((error) => {
                   console.warn(error);
             });
         })
         .catch(err => console.error(err));
-
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

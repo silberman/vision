@@ -36,6 +36,20 @@ class MainPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write('Hello, World from appengine!')
 
+class TestHandler(webapp2.RequestHandler):
+    """
+    Useful for testing.  Prints out request arguments and their value's size, and returns
+    some success json.
+    """
+    def post(self):
+        for key_index, key in enumerate(self.request.arguments()):
+            value = self.request.get(key)
+            print key_index, key, len(value), type(value)
+
+        self.response.content_type = 'application/json'
+        response_obj = dict(success=True, best_label="test!")
+        self.response.write(json.dumps(response_obj))
+
 class PostPictureHandler(webapp2.RequestHandler):
     """
     Receives POSTs of photos/label-requests from the app, returning data gathered from the google
@@ -143,6 +157,7 @@ def get_best_label(filename_with_bucket=None, gs_location=None, detection_type=L
 
 urls = [
     ('/', MainPage),
+    ('/testpostpic/', TestHandler),
     ('/postpic/', PostPictureHandler),
 ]
 

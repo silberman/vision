@@ -15,7 +15,9 @@
 
 todos:
 
-remove xhr bullshit if possible to do entirely with FormData()
+move todos to trello
+
+deal with orientation of phone
 
 handle no response, ie a picture with no text
 

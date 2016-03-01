@@ -1,4 +1,11 @@
 
 
+microsoft codepush looks to be the best.  Currently free in beta, with pricing TBD, maybe always free.
+https://github.com/Microsoft/code-push
+https://github.com/Microsoft/react-native-code-push#getting-started
+http://microsoft.github.io/code-push/docs/getting-started.html
 
-Siphon: looks not ready, $29/month
+aerofs open source.  Have to host o
+https://github.com/aerofs/react-native-auto-updater
+
+siphon & apphub.  paid services, seem same as non-paid, if not worse
