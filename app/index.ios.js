@@ -11,6 +11,8 @@ import React, {
 } from 'react-native';
 import Camera from 'react-native-camera';
 
+import ApiUtils from './ApiUtils';
+
 var PICTURE_POST_URL = "http://localhost:8080/postpic/";
 //var PICTURE_POST_URL = "https://steam-1111.appspot.com/postpic/"
 
@@ -98,6 +100,7 @@ class LabelPictureApp extends Component {
             }
 
             fetch(PICTURE_POST_URL, post_info)
+              .then(ApiUtils.checkStatus)
               .then((response) => response.json())
               .then((response_info) => {
                   console.log(response_info);
