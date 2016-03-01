@@ -21,12 +21,32 @@ class LabelPictureApp extends Component {
   constructor(props) {
       super(props);
       this.state = {
-          is_uploading: false,
+          is_loading: false,
       };
   }
 
   render() {
     console.log("render called");
+    var UI_part;
+    if (this.state.is_loading) {
+        UI_part = (
+            <View style={styles.container}>
+                <Text style={styles.capture}>Loading...</Text>
+            </View>
+        );
+    } else {
+        UI_part = (
+            <View>
+                <TouchableHighlight onPress={() => { this.takeAndPostPicture(TEXT_DETECTION) }}>
+                    <Text style={styles.capture}>Read Text</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight onPress={() => { this.takeAndPostPicture(LABEL_DETECTION) }}>
+                    <Text style={styles.capture}>Label Pic</Text>
+                </TouchableHighlight>
+            </View>
+        );
+    }
 
     return (
       <View style={styles.container}>
@@ -39,13 +59,7 @@ class LabelPictureApp extends Component {
           captureTarget={Camera.constants.CaptureTarget.temp}
           aspect={Camera.constants.Aspect.Fill}>
 
-          <TouchableHighlight onPress={() => { this.takeAndPostPicture(TEXT_DETECTION) }}>
-            <Text style={styles.capture}>Read Text</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight onPress={() => { this.takeAndPostPicture(LABEL_DETECTION) }}>
-            <Text style={styles.capture}>Label Pic</Text>
-          </TouchableHighlight>
+          {UI_part}
 
         </Camera>
       </View>
@@ -53,18 +67,20 @@ class LabelPictureApp extends Component {
   }
 
   takePicture() {
-    console.log("takePicture called");
+    throw "deprecated";
     this.camera.capture()
       .then((data) => console.log(data))
       .catch(err => console.error(err));
   }
 
+  setNotLoading() {
+      this.setState({is_loading: false});
+  }
+
   takeAndPostPicture(detection_type) {
-      console.log("takeAndPostPicture called");
-      console.log("************", detection_type);
+      this.setState({is_loading: true});
       this.camera.capture()
         .then((data) => {
-            console.log("heres the data:", data);
             var request_object = {method: 'POST', body: data};
 
             var photo = {
@@ -72,14 +88,10 @@ class LabelPictureApp extends Component {
                 type: 'image/jpeg',
                 name: 'photo.jpg',
             };
-            console.log(photo);
-
             var body = new FormData();
 
             body.append('photo', photo);
             body.append('detection_type', detection_type);
-
-            console.log(body);
 
             var xhr = new XMLHttpRequest();
 
@@ -95,6 +107,7 @@ class LabelPictureApp extends Component {
                         'Upload failed',
                         'Expected HTTP 200 OK response, got ' + xhr.status
                     );
+                    this.setNotLoading();
                     return;
                 }
                 if (!xhr.responseText) {
@@ -102,6 +115,7 @@ class LabelPictureApp extends Component {
                         'Upload failed',
                         'No response payload.'
                     );
+                    this.setNotLoading();
                     return;
                 }
                 console.log("we got a non-error back back, it may or may not have the final result");
@@ -109,12 +123,11 @@ class LabelPictureApp extends Component {
                 var response_obj = JSON.parse(xhr.responseText);
                 console.log(response_obj);
                 if (response_obj.success) {
-                    console.log("success");
+                    this.setNotLoading();
                     var best_label = response_obj.best_label;
-                    console.log("best label is: " + best_label);
                     AlertIOS.alert(
                         'Nice pic!',
-                        'What a beautiful ' + best_label
+                        best_label
                     );
                 }
             };
