@@ -13,6 +13,26 @@ from googleapiclient import discovery
 from apiclient.discovery import build
 from oauth2client.client import GoogleCredentials
 
+# detection types available from google vision API:
+LABEL_DETECTION = 'LABEL_DETECTION'
+TEXT_DETECTION = 'TEXT_DETECTION'
+FACE_DETECTION = 'FACE_DETECTION'
+LANDMARK_DETECTION = 'LANDMARK_DETECTION'
+LOGO_DETECTION = 'LOGO_DETECTION'
+SAFE_SEARCH_DETECTION = 'SAFE_SEARCH_DETECTION'
+IMAGE_PROPERTIES = 'IMAGE_PROPERTIES'
+
+# The google vision API will return lists of annotations for each detection_type
+# of 0 - the num we ask for.  The key in their response dicts are:
+# ie, asking for 1 label will get something like:
+# {u'responses': [{u'labelAnnotations': [{u'mid': u'/m/0n0j', u'score': 0.67856497, u'description': u'area'}]}]}
+ANNOTATION_NAME_FOR_DETECTION_TYPE = {
+    LABEL_DETECTION: 'labelAnnotations',
+    TEXT_DETECTION: 'textAnnotations',
+}
+
+ACCEPTED_DETECTION_TYPES = set([LABEL_DETECTION, TEXT_DETECTION])
+
 class MainPage(webapp2.RequestHandler):
     def get(self):
         print "MainPage get() called"
@@ -32,17 +52,19 @@ class PostPictureHandler(webapp2.RequestHandler):
 
 
         photo_data = self.request.get('photo')
+        detection_type = self.request.get('detection_type')
+        print '#' * 30, detection_type
+        print ACCEPTED_DETECTION_TYPES
+        print detection_type in ACCEPTED_DETECTION_TYPES
+        assert detection_type in ACCEPTED_DETECTION_TYPES
 
-        #filename_created = write_photo(photo_data)
-        #filename_created = write_photo_via_credentials(photo_data)
-
+        # Save the data to a google storage bucket
         gs_location = write_photo_via_gcloud_storage(photo_data)
-        best_label = get_best_label(gs_location=gs_location)
 
-        #best_label = get_best_label(filename_created)
+        # get the vision api result
+        best_label = get_best_label(gs_location=gs_location, detection_type=detection_type)
 
         self.response.content_type = 'application/json'
-
         if best_label is None:
             response_obj = dict(success=False)
         else:
@@ -108,17 +130,12 @@ def write_photo(photo_from_POST):
     return filename
 
 def get_vision_service():
-    print "*" * 50
-    print "os.environ:", os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
     DISCOVERY_URL='https://{api}.googleapis.com/$discovery/rest?version={apiVersion}'
     credentials = GoogleCredentials.get_application_default().create_scoped(
         ['https://www.googleapis.com/auth/cloud-platform'])
-    http = httplib2.Http()
-    credentials.authorize(http)
-    return discovery.build('vision', 'v1', credentials=credentials,
-                           discoveryServiceUrl=DISCOVERY_URL)
+    return discovery.build('vision', 'v1', credentials=credentials, discoveryServiceUrl=DISCOVERY_URL)
 
-def get_best_label(filename_with_bucket=None, gs_location=None):
+def get_best_label(filename_with_bucket=None, gs_location=None, detection_type=LABEL_DETECTION):
     '''Run a label request on a single image'''
     assert filename_with_bucket or gs_location
     service = get_vision_service()
@@ -140,7 +157,7 @@ def get_best_label(filename_with_bucket=None, gs_location=None):
             },
            },
           'features': [{
-            'type': 'LABEL_DETECTION',
+            'type': detection_type,
             'maxResults': 1,
            }]
          }]
@@ -152,14 +169,17 @@ def get_best_label(filename_with_bucket=None, gs_location=None):
 
     # We are only sending 1, so we only expect 1 response (even if it's an error)
     response = responses['responses'][0]
-    print response
     if 'error' in response:
         logging.error(response)
         return None
 
-    label = response['labelAnnotations'][0]['description']
-    logging.debug('Found label: %s for %s' % (label, filename_with_bucket))
-    return label
+    # For now we just return top top 1 of the single detection_type. We may want the output
+    # to be larger, in fact should perhaps just have the frontend deal directly with the output
+    # from google
+    assert detection_type in ANNOTATION_NAME_FOR_DETECTION_TYPE
+    annotation_name = ANNOTATION_NAME_FOR_DETECTION_TYPE[detection_type]
+    best_label = response[annotation_name][0]['description']
+    return best_label
 
 urls = [
     ('/', MainPage),

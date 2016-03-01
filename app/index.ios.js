@@ -12,20 +12,22 @@ import React, {
 import Camera from 'react-native-camera';
 
 var PICTURE_POST_URL = "http://localhost:8080/postpic/";
-//PICTURE_POST_URL = "https://steam-1111.appspot.com/postpic/"
+//var PICTURE_POST_URL = "https://steam-1111.appspot.com/postpic/"
+
+const LABEL_DETECTION = 'LABEL_DETECTION';
+const TEXT_DETECTION = 'TEXT_DETECTION';
 
 class LabelPictureApp extends Component {
-    /**
   constructor(props) {
       super(props);
       this.state = {
-          is_uploading = false;
+          is_uploading: false,
       };
   }
-  **/
 
   render() {
     console.log("render called");
+
     return (
       <View style={styles.container}>
         <Camera
@@ -36,9 +38,15 @@ class LabelPictureApp extends Component {
           //captureTarget={Camera.constants.CaptureTarget.disk}
           captureTarget={Camera.constants.CaptureTarget.temp}
           aspect={Camera.constants.Aspect.Fill}>
-          <TouchableHighlight onPress={this.takeAndPostPicture.bind(this)}>
-            <Text style={styles.capture}>[Snap!]</Text>
+
+          <TouchableHighlight onPress={() => { this.takeAndPostPicture(TEXT_DETECTION) }}>
+            <Text style={styles.capture}>Read Text</Text>
           </TouchableHighlight>
+
+          <TouchableHighlight onPress={() => { this.takeAndPostPicture(LABEL_DETECTION) }}>
+            <Text style={styles.capture}>Label Pic</Text>
+          </TouchableHighlight>
+
         </Camera>
       </View>
     );
@@ -51,8 +59,9 @@ class LabelPictureApp extends Component {
       .catch(err => console.error(err));
   }
 
-  takeAndPostPicture() {
+  takeAndPostPicture(detection_type) {
       console.log("takeAndPostPicture called");
+      console.log("************", detection_type);
       this.camera.capture()
         .then((data) => {
             console.log("heres the data:", data);
@@ -67,9 +76,8 @@ class LabelPictureApp extends Component {
 
             var body = new FormData();
 
-            body.append('authToken', 'secret');
             body.append('photo', photo);
-            body.append('title', 'A beautiful photo!');
+            body.append('detection_type', detection_type);
 
             console.log(body);
 

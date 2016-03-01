@@ -1,5 +1,49 @@
 
 
+{u'responses': [
+
+
+{u'textAnnotations': [
+
+
+{u'locale': u'en', u'boundingPoly': {u'vertices': [{u'y': 1297, u'x': 483}, {u'y': 1297, u'x': 1117}, {u'y': 1361, u'x': 1117}, {u'y': 1361, u'x': 483}]}, u'description': u'29.02.16 14:27:24\n'}]}]}
+
+
+
+*******************
+
+
+todos:
+
+handle no response, ie a picture with no text
+
+fix up the main() thing in helloworld, or make proper api anew
+
+why is sometimes hitting twice?  is it just double-clid related, fixed with is_loading and/or spinner
+or just shows exceptions twice?
+
+have server function that basically wraps google vision API, so wants:
+  - a list of features, and how many of each you want
+  - the gs:// image_uri
+
+
+have PICTURE_POST_URL be based on a variable that comes from the server, either indirectly via
+dev_mode, or just have it be a part of the global state
+
+
+
+
+
+
+******************
+Provisioning profile stuff:
+
+App ID Description: visionapp
+Identifier:	EL55865Z6U.com.dansilberman.vision
+Bundle id: com.dansilberman.vision
+vision_provisioning_profile
+
+******************
 
 debugging with pdb
 import pdb; pdb.set_trace();
@@ -38,6 +82,17 @@ dev needs to run once:  gcloud auth login
 then can do:
 from oauth2client.client import GoogleCredentials
 credentials = GoogleCredentials.get_application_default()
+
+
+What is the relationship between gcloud and the Google APIs Python Client?
+The Google APIs Python Client is a client library for using the broad set of Google APIs.
+gcloud is built specifically for the Google Cloud Platform and is the recommended way to
+integrate Google Cloud APIs into your Python applications. If your application requires
+both Google Cloud Platform and other Google APIs, the 2 libraries may be used by your
+application.
+
+so use gcloud when available, use the discovery/build method for non-gcloud stuff
+for example, storage is gcloud, but vision is not
 
 *******
 
