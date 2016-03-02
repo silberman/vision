@@ -1,0 +1,207 @@
+
+
+
+******************
+Provisioning profile stuff:
+
+App ID Description: visionapp
+Identifier:	EL55865Z6U.com.dansilberman.vision
+Bundle id: com.dansilberman.vision
+vision_provisioning_profile
+
+******************
+
+
+
+*******************
+
+
+******* Google credentials
+
+Using default credentials since on appengine
+
+https://developers.google.com/identity/protocols/application-default-credentials?hl=en_US
+prod will automatically have credentials
+dev needs to run once:  gcloud auth login
+
+then can do:
+from oauth2client.client import GoogleCredentials
+credentials = GoogleCredentials.get_application_default()
+
+
+What is the relationship between gcloud and the Google APIs Python Client?
+The Google APIs Python Client is a client library for using the broad set of Google APIs.
+gcloud is built specifically for the Google Cloud Platform and is the recommended way to
+integrate Google Cloud APIs into your Python applications. If your application requires
+both Google Cloud Platform and other Google APIs, the 2 libraries may be used by your
+application.
+
+so use gcloud when available, use the discovery/build method for non-gcloud stuff
+for example, storage is gcloud, but vision is not
+
+*******
+
+Adding module to requirements.txt that are used in appengine, see comment at top of
+appengine/appengine_config.py.  Basically we pip install stuff into vision/appengine/lib,
+and then appengine_config.py tells appengine about that lib directory.
+
+*************** App engine
+
+To run devserver of app engine code in /vison/appengine:
+(vision)~/vision$ dev_appserver.py appengine/
+
+To have dev app raise NeedIndexError if there isn't an index needed (for testing),
+and other ways to run dev_appserver:
+dev_appserver.py --require_indexes
+dev_appserver.py DIRECTORY/app.yaml
+dev_appserver.py --host localhost:9999 DIRECTORY/app.yaml
+
+
+*** to deploy ***
+(vision)~/vision$ gcloud preview app deploy appengine/app.yaml
+see "Deploying datastore indexes" at https://cloud.google.com/sdk/gcloud-app
+
+
+
+
+********* Google cloud shell
+appengine deploy:
+gcloud preview app deploy app.yaml --promote
+
+
+
+
+******** Google cloud cli
+# list current gcloud config (to see what project is active, for one)
+gcloud config list
+gcloud config set project steam-1111
+gcloud config set compute/zone us-central1-c
+
+
+********************************
+
+http://localhost:8081/debugger-ui
+ALT-window-J on my microsoft keyboard
+
+cmd-r to reload
+cmd-d (or shake) for dev menu
+
+******** React native stuff
+
+Haven't done android setup: https://facebook.github.io/react-native/docs/android-setup.html
+
+(vision)~/vision$ react-native init app
+This will walk you through creating a new React Native project in /Users/dansilberman/vision/app
+Installing react-native package from npm...
+Setting up new React Native app in /Users/dansilberman/vision/app
+To run your app on iOS:
+   cd /Users/dansilberman/vision/app
+   react-native run-ios
+   - or -
+   Open /Users/dansilberman/vision/app/ios/app.xcodeproj in Xcode
+   Hit the Run button
+To run your app on Android:
+   Have an Android emulator running (quickest way to get started), or a device connected
+   cd /Users/dansilberman/vision/app
+   react-native run-android
+
+
+Note on install of react-native-camera (from app directory, where package.json is)
+from https://github.com/lwansbrough/react-native-camera
+npm install rnpm --global
+npm install react-native-camera@https://github.com/lwansbrough/react-native-camera.git --save
+rnpm link react-native-camera
+
+
+
+
+******** Google computer vision API info
+
+base64 6328.png > base64_6328.png
+or:
+base64 -i input.jpg -o output.jpg
+
+def encode_image(image):
+  image_content = image.read()
+  return base64.b64encode(image_content)
+
+curl -v -k -s -H "Content-Type: application/json" https://vision.googleapis.com/v1/images:annotate?key=browser_key --data-binary @request_filename
+curl -v -k -s -H "Content-Type: application/json" https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCDIKN2DnmvF5xGyt0RluzCf9Tm3UedP4o --data-binary @json_request_6328.json
+
+
+Image recommended sizes
+FACE_DETECTION	1600 x 1200	Distance between eyes is most important
+LANDMARK_DETECTION	640 x 480
+LOGO_DETECTION	640 x 480
+LABEL_DETECTION	640 x 480
+TEXT_DETECTION	1024 x 768	OCR requires more resolution to detect characters
+SAFE_SEARCH_DETECTION	640 x 480
+
+In practice, a standard size of 640 x 480 pixels works well in most cases;
+sizes larger than this may not gain much in accuracy, while greatly diminishing throughput.
+When at all possible, pre-process your images to reduce their size to these minimum standards.
+
+File Sizes
+Image files sent to the Google Cloud Vision API should not exceed 4 MB.
+Reducing your file size can significantly improve throughput; however, be careful not to reduce
+image quality in the process. If you are batching images and sending them in one request,
+also note that the Vision API imposes an 8 MB per request limit.
+
+Usage limits
+MB per image	4 MB
+MB per request	8 MB
+Requests per second	10
+Requests per feature per day	700,000
+Requests per feature per month	20,000,000
+Images per second	8
+Images per request	16
+
+
+***************************
+
+
+*************** Docker
+Note: on a mac, docker-machine runs a virtualbox VM that acts as the linux host
+for docker.  So docker-machine ls should show this "default" machine active.
+Other actual containers are visible from docker ps.
+
+The docker machine ip is the one we'll use to access the containers contained on it,
+and can be found via: docker-machine ip default
+
+
+~$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+~$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER    ERRORS
+default   *        virtualbox   Running   tcp://192.168.99.100:2376           v1.10.2
+~$ docker-machine env default
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://192.168.99.100:2376"
+export DOCKER_CERT_PATH="/Users/dansilberman/.docker/machine/machines/default"
+export DOCKER_MACHINE_NAME="default"
+# Run this command to configure your shell:
+# eval $(docker-machine env default)
+
+docker run hello-world
+
+docker run usage:
+ -d as a daemon
+ -P Publish all exposed ports to random ports
+ --name xxx
+docker run -d -P --name web nginx
+
+(vision)~/vision$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                                           NAMES
+397a2e1f26f4        nginx               "nginx -g 'daemon off"   About a minute ago   Up About a minute   0.0.0.0:32769->80/tcp, 0.0.0.0:32768->443/tcp   web
+(vision)~/vision$ docker port web
+443/tcp -> 0.0.0.0:32768
+80/tcp -> 0.0.0.0:32769
+
+(vision)~/vision$ docker-machine ip default
+192.168.99.100
+
+So can go to 192.168.99.100:32769 to see nginx successfully installed message
+
+to remove that container:
+docker stop web
+docker rm web
