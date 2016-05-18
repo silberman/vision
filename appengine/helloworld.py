@@ -1,15 +1,12 @@
 
 import datetime
 import json
-import httplib2
 import logging
-import os
-import time
 import webapp2
 
 from gcloud import storage
-from googleapiclient import discovery # for vision API
-from oauth2client.client import GoogleCredentials # for vision API
+from googleapiclient import discovery  # for vision API
+from oauth2client.client import GoogleCredentials  # for vision API
 
 # detection types available from google vision API:
 LABEL_DETECTION = 'LABEL_DETECTION'
@@ -31,10 +28,12 @@ ANNOTATION_NAME_FOR_DETECTION_TYPE = {
 
 ACCEPTED_DETECTION_TYPES = set([LABEL_DETECTION, TEXT_DETECTION])
 
+
 class MainPage(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write('Hello, World from appengine!')
+
 
 class TestHandler(webapp2.RequestHandler):
     """
@@ -49,6 +48,7 @@ class TestHandler(webapp2.RequestHandler):
         self.response.content_type = 'application/json'
         response_obj = dict(success=True, best_label="test!")
         self.response.write(json.dumps(response_obj))
+
 
 class PostPictureHandler(webapp2.RequestHandler):
     """
@@ -78,6 +78,7 @@ class PostPictureHandler(webapp2.RequestHandler):
         print response_obj
         self.response.write(json.dumps(response_obj))
 
+
 def _safe_filename(filename):
     """
     Generates a safe filename that is unlikely to collide with existing objects
@@ -87,6 +88,7 @@ def _safe_filename(filename):
     date = datetime.datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
     basename, extension = filename.rsplit('.', 1)
     return "{0}-{1}.{2}".format(basename, date, extension)
+
 
 def write_photo_via_gcloud_storage(photo_data):
     client = storage.Client(project='steam-1111')
@@ -100,14 +102,17 @@ def write_photo_via_gcloud_storage(photo_data):
     gs_location = gs_location_from_bucket_and_filename(bucket_name, safe_filename)
     return gs_location
 
+
 def gs_location_from_bucket_and_filename(bucket_name, filename):
     return "gs://%s/%s" % (bucket_name, filename)
 
+
 def get_vision_service():
-    DISCOVERY_URL='https://{api}.googleapis.com/$discovery/rest?version={apiVersion}'
+    DISCOVERY_URL = 'https://{api}.googleapis.com/$discovery/rest?version={apiVersion}'
     credentials = GoogleCredentials.get_application_default().create_scoped(
         ['https://www.googleapis.com/auth/cloud-platform'])
     return discovery.build('vision', 'v1', credentials=credentials, discoveryServiceUrl=DISCOVERY_URL)
+
 
 def get_best_label(filename_with_bucket=None, gs_location=None, detection_type=LABEL_DETECTION):
     '''Run a label request on a single image'''
@@ -163,12 +168,13 @@ urls = [
 
 app = webapp2.WSGIApplication(urls, debug=True)
 
+
 def main():
     # Set the logging level in the main function
     # See the section on <a href="/appengine/docs/python/#Python_App_caching">Requests and App Caching</a> for information on how
     # App Engine reuses your request handlers when you specify a main function
     logging.getLogger().setLevel(logging.DEBUG)
-    webapp.util.run_wsgi_app(application)
+    webapp.util.run_wsgi_app(application)  # XXX does this run? seems like it shouldn't
 
 if __name__ == '__main__':
     main()

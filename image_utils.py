@@ -19,6 +19,7 @@ def get_image_info(image_filename):
     pil_image = Image.open(image_filename)
     return pil_image.format, pil_image.size, pil_image.mode
 
+
 def get_image_shape(image_filename):
     # Return (width, height) of the given image.
     pil_image = Image.open(image_filename)
