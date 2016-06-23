@@ -1,4 +1,15 @@
 #!/usr/bin/python
+"""
+Script to settle a bet with AJ.
+
+You need to create a browser key credential to be able to run this.
+In gcloud console (console.cloud.google.com), do:
+API Manager -> Credentials -> Create credentials -> API key -> Browser key
+Then set the big string they give you as an environment variable called "VISION_BROWSER_KEY"
+
+Usage:
+python bet.py some_image_to_classify.png
+"""
 
 import argparse
 import base64
@@ -11,11 +22,6 @@ import sys
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(THIS_DIR, 'data')
 
-# You need to create a browser key credential to be able to run this.
-# In gcloud console (console.cloud.google.com), do:
-# API Manager -> Credentials -> Create credentials -> API key -> Browser key
-# Then set the big string they give you as an environment variable called "VISION_BROWSER_KEY",
-# with
 GOOGLE_BROWSER_KEY = os.environ.get("VISION_BROWSER_KEY", "")
 if not GOOGLE_BROWSER_KEY:
     raise ValueError("Missing VISION_BROWSER_KEY environment variable required to run.  See comment")

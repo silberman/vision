@@ -1,1 +1,1 @@
-Iphone app (via react-native) to take a picture and classify it via Google's cloud-vision API.
+iPhone app (via react-native) to take a picture and classify it using Google's cloud-vision API.
