@@ -11,8 +11,14 @@ import sys
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(THIS_DIR, 'data')
 
-#XXX: this repo currently has active google api browsker key here.
-GOOGLE_BROWSER_KEY = "AIzaSyCDIKN2DnmvF5xGyt0RluzCf9Tm3UedP4o"
+# You need to create a browser key credential to be able to run this.
+# In gcloud console (console.cloud.google.com), do:
+# API Manager -> Credentials -> Create credentials -> API key -> Browser key
+# Then set the big string they give you as an environment variable called "VISION_BROWSER_KEY",
+# with
+GOOGLE_BROWSER_KEY = os.environ.get("VISION_BROWSER_KEY", "")
+if not GOOGLE_BROWSER_KEY:
+    raise ValueError("Missing VISION_BROWSER_KEY environment variable required to run.  See comment")
 
 BASE_GOOGLE_IMAGES_API_URL = 'https://vision.googleapis.com/v1/images:annotate?key=%s'
 
@@ -74,7 +80,7 @@ def identify_image_from_file(image_full_filename, max_results=10, detection_type
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-      'image_file', help='The image you\'d like to label.')
+      'image_file', help="The image you'd like to label.")
     args = parser.parse_args()
 
     if THIS_DIR in args.image_file:

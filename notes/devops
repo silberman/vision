@@ -127,7 +127,7 @@ def encode_image(image):
 
 curl -v -k -s -H "Content-Type: application/json" https://vision.googleapis.com/v1/images:annotate?key=browser_key --data-binary @request_filename
 curl -v -k -s -H "Content-Type: application/json" https://vision.googleapis.com/v1/images:annotate?key=AIzaSyCDIKN2DnmvF5xGyt0RluzCf9Tm3UedP4o --data-binary @json_request_6328.json
-
+Note: the browser key used here is not active anymore
 
 Image recommended sizes
 FACE_DETECTION	1600 x 1200	Distance between eyes is most important
